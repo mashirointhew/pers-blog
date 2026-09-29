@@ -110,12 +110,12 @@ The default production URL is `https://pers-blog.pages.dev`. Set `SITE_URL` to t
 ### Cloudflare Pages deployment
 
 1. Push the repository to GitHub and connect it in Cloudflare under **Workers & Pages → Create application → Pages → Connect to Git**.
-2. Choose `main` as the production branch.
+2. Choose `master` as the production branch (the current GitHub branch).
 3. Set the build command to `npm run build` and the build output directory to `dist`.
 4. Set the `NODE_VERSION` environment variable to `22.12.0`. Set `SITE_URL` to the Pages URL or custom domain once known.
 5. Enable pull request builds to get Pages preview deployments.
 
-The GitHub Actions workflow checks Astro/TypeScript and builds on pushes and pull requests targeting `main`. Cloudflare's Git integration publishes successful production-branch pushes and creates previews for pull requests. The repository can remain private. No backend, database, or secrets are needed for this static site.
+The GitHub Actions workflow checks Astro/TypeScript and builds on pushes and pull requests targeting `master`. Cloudflare's Git integration publishes successful production-branch pushes and creates previews for pull requests. The repository can remain private. No backend, database, or secrets are needed for this static site.
 
 ## Documentation
 

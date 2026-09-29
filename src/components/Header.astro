@@ -64,10 +64,13 @@
     toggle.focus();
   }
 
-  toggle?.addEventListener('click', () => {
-    if (!panel?.classList.contains('is-open')) openSearch();
-    else closeSearch();
-  });
+  if (toggle && !toggle.dataset.bound) {
+    toggle.dataset.bound = 'true';
+    toggle.addEventListener('click', () => {
+      if (!panel?.classList.contains('is-open')) openSearch();
+      else closeSearch();
+    });
+  }
 
   document.addEventListener('click', (event) => {
     const target = event.target;
