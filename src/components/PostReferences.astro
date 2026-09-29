@@ -1,0 +1,9 @@
+---
+const { references = [] } = Astro.props;
+---
+{references.length > 0 && <aside class="post-references" aria-label="Links and references mentioned in this post">
+  <h2 class="sidebar-label">Links in this post</h2>
+  <ul class="sidebar-references">
+    {references.map((reference: { title: string; url: string }) => <li><a href={reference.url} target="_blank" rel="noopener noreferrer">{reference.title}</a></li>)}
+  </ul>
+</aside>}

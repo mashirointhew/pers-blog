@@ -1,17 +1,26 @@
 ---
-
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPosts } from '../lib/posts';
+const posts = await getPosts();
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <section class="shell home-shell pb-20 pt-12 lg:pt-16">
+    <div class="home-lower">
+      <div>
+        <div class="mb-6 flex items-baseline justify-between">
+          <h1 class="mono text-xs uppercase tracking-[.2em] text-[var(--muted)]">Recent posts</h1>
+          <a href="/blog" class="text-sm text-[var(--accent)]">All posts →</a>
+        </div>
+        {posts.slice(0, 8).map((post) => <PostCard post={post} />)}
+      </div>
+      <aside class="home-aside">
+        <h2 class="mono text-xs uppercase tracking-[.2em]">A few themes</h2>
+        <div class="mt-5 flex flex-wrap gap-2">
+          {['design', 'web', 'craft', 'systems', 'life'].map((tag) => <a href={`/tags/${tag}`} class="topic-link">{tag}</a>)}
+        </div>
+        <p class="mt-10 text-sm leading-6 text-[var(--muted)]">An independent, low-noise corner of the internet. Notes on making, learning, and paying attention.</p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

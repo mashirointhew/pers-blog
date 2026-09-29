@@ -1,0 +1,40 @@
+---
+import { getPosts, getTagMap, postSlug, formatDate } from '../lib/posts';
+const posts = await getPosts();
+const tagMap = await getTagMap();
+const tags = Object.entries(tagMap).sort(([a], [b]) => a.localeCompare(b));
+const { currentPostId, postTags = [] } = Astro.props;
+const recentPosts = posts.filter((post) => post.id !== currentPostId).slice(0, 4);
+---
+<aside class="blog-sidebar" aria-label={currentPostId ? 'Post tags' : 'Blog navigation'}>
+  {currentPostId ? <>
+    {postTags.length > 0 && <section>
+      <h2 class="sidebar-label">Tags</h2>
+      <nav class="sidebar-links" aria-label="Post tags">
+        {postTags.map((tag: string) => <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>)}
+      </nav>
+    </section>}
+  </> : <>
+  <section>
+    <h2 class="sidebar-label">Browse</h2>
+    <nav class="sidebar-links" aria-label="Blog sections">
+      <a href="/blog">All writing <span>{posts.length}</span></a>
+      <a href="/search" data-open-search>Search posts</a>
+    </nav>
+  </section>
+
+  {tags.length > 0 && <section>
+    <h2 class="sidebar-label">Topics</h2>
+    <nav class="sidebar-links" aria-label="Topics">
+      {tags.map(([tag, taggedPosts]) => <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}<span>{taggedPosts.length}</span></a>)}
+    </nav>
+  </section>}
+
+  {recentPosts.length > 0 && <section>
+    <h2 class="sidebar-label">Recent notes</h2>
+    <ul class="sidebar-recent">
+      {recentPosts.map((post) => <li><a href={`/blog/${postSlug(post.id)}`}>{post.data.title}</a><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time></li>)}
+    </ul>
+  </section>}
+  </>}
+</aside>

@@ -1,0 +1,124 @@
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="/" aria-label="Field Notes home">
+      <svg class="brand-mark" aria-hidden="true" viewBox="0 0 32 32" fill="none">
+        <path class="brand-mark-page" d="M7.5 4.75h11l6 6v16.5h-17V4.75Z" />
+        <path class="brand-mark-fold" d="M18.5 4.75v6h6" />
+        <path class="brand-mark-line" d="M11.5 16.25h9m-9 4h6" />
+      </svg>
+      <span class="brand-name serif">Field Notes<span class="brand-period">.</span></span>
+    </a>
+    <nav aria-label="Main navigation" class="main-nav">
+      <a href="/blog">Writing</a>
+      <a href="/projects">Projects</a>
+      <a href="/links">Links</a>
+      <div id="header-search" class="header-search" aria-hidden="true" inert>
+        <label class="sr-only" for="header-search-input">Search posts</label>
+        <input id="header-search-input" class="search-input" type="search" placeholder="Search posts" autocomplete="off" tabindex="-1" />
+        <div class="header-search-popover">
+          <p id="header-search-status" class="search-status" role="status" aria-live="polite">Type to search posts.</p>
+          <div id="header-search-results" class="header-search-results"></div>
+        </div>
+      </div>
+      <button id="search-toggle" class="nav-search" type="button" aria-expanded="false" aria-controls="header-search">Search</button>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch theme">Aa</button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('#search-toggle');
+  const panel = document.querySelector<HTMLElement>('#header-search');
+  const input = document.querySelector<HTMLInputElement>('#header-search-input');
+  const output = document.querySelector<HTMLDivElement>('#header-search-results');
+  const status = document.querySelector<HTMLParagraphElement>('#header-search-status');
+  type Pagefind = { search: (query: string) => Promise<{ results: Array<{ data: () => Promise<{ url: string; meta: { title?: string }; excerpt: string }> }> }> };
+  let pagefind: Pagefind | undefined;
+  let timer: number | undefined;
+
+  async function getPagefind() {
+    if (pagefind) return pagefind;
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const module = await import(/* @vite-ignore */ `${base}/pagefind/pagefind.js`);
+    pagefind = module.default as Pagefind;
+    return pagefind;
+  }
+
+  function openSearch() {
+    if (!panel || !toggle) return;
+    panel.classList.add('is-open');
+    panel.removeAttribute('inert');
+    panel.setAttribute('aria-hidden', 'false');
+    toggle.setAttribute('aria-expanded', 'true');
+    input?.removeAttribute('tabindex');
+    input?.focus();
+  }
+
+  function closeSearch() {
+    if (!panel || !toggle) return;
+    panel.classList.remove('is-open');
+    panel.setAttribute('inert', '');
+    panel.setAttribute('aria-hidden', 'true');
+    input?.setAttribute('tabindex', '-1');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.focus();
+  }
+
+  toggle?.addEventListener('click', () => {
+    if (!panel?.classList.contains('is-open')) openSearch();
+    else closeSearch();
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target instanceof Element && target.closest('[data-open-search]')) {
+      event.preventDefault();
+      openSearch();
+    }
+  });
+
+  input?.addEventListener('input', () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(async () => {
+      const query = input.value.trim();
+      if (!output || !status) return;
+      output.replaceChildren();
+      if (!query) {
+        status.textContent = 'Type to search posts.';
+        return;
+      }
+
+      status.textContent = 'Searching...';
+      try {
+        const index = await getPagefind();
+        const response = await index.search(query);
+        const results = await Promise.all(response.results.slice(0, 8).map((item) => item.data()));
+        status.textContent = results.length ? `${results.length}${response.results.length > 8 ? '+' : ''} results` : 'No matching posts.';
+        for (const result of results) {
+          const link = document.createElement('a');
+          link.href = result.url;
+          link.className = 'search-result';
+          const title = document.createElement('span');
+          title.className = 'search-result-title';
+          title.textContent = result.meta.title ?? 'Untitled';
+          const excerpt = document.createElement('p');
+          excerpt.className = 'search-result-excerpt';
+          excerpt.textContent = result.excerpt.replace(/<[^>]*>/g, '');
+          link.append(title, excerpt);
+          output.append(link);
+        }
+      } catch {
+        status.textContent = 'Search is available after a production build. Run npm run build to create the index.';
+      }
+    }, 120);
+  });
+
+  window.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      openSearch();
+    } else if (event.key === 'Escape' && panel?.classList.contains('is-open')) {
+      closeSearch();
+    }
+  });
+</script>

@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate } from '../../lib/posts';
+
+const links = (await getCollection('links', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+<BaseLayout title="Links" description="A small collection of things worth reading, watching, and keeping.">
+  <section class="shell section-page pb-20 pt-12 lg:pt-16">
+    <p class="mono section-kicker">Recommended reading</p>
+    <h1 class="serif section-title">Links</h1>
+    <p class="section-intro">Articles, tools, and other useful things from around the web.</p>
+    {links.length ? <ul class="links-list mt-12">
+      {links.map((item) => <li>
+        <time datetime={item.data.date.toISOString()}>{formatDate(item.data.date)}</time>
+        <div><a class="link-title" href={item.data.url} target="_blank" rel="noreferrer">{item.data.title}<span aria-hidden="true"> ↗</span></a>
+          <p>{item.data.description}{item.data.source && <span class="link-source"> · {item.data.source}</span>}</p>
+          {item.data.tags.length > 0 && <span class="link-tags">{item.data.tags.join(' / ')}</span>}
+        </div>
+      </li>)}</ul> : <p class="empty-note">Saved links will appear here as they are published.</p>}
+  </section>
+</BaseLayout>

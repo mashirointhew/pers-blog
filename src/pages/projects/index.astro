@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate } from '../../lib/posts';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+<BaseLayout title="Projects" description="Selected projects and experiments.">
+  <section class="shell section-page pb-20 pt-12 lg:pt-16">
+    <p class="mono section-kicker">Selected work</p>
+    <h1 class="serif section-title">Projects</h1>
+    <p class="section-intro">Projects and experiments I have worked on.</p>
+    {projects.length ? <div class="project-list mt-12">
+      {projects.map((project) => <article class="project-row">
+        <div class="project-meta"><time datetime={project.data.date.toISOString()}>{formatDate(project.data.date)}</time><span>{project.data.status}</span></div>
+        <div>
+          <h2 class="serif project-title">{project.data.title}</h2>
+          <p class="project-description">{project.data.description}</p>
+          {project.data.tags.length > 0 && <p class="project-tags">{project.data.tags.join(' / ')}</p>}
+          <div class="project-actions">
+            <a href={`/projects/${project.id.replace(/\.(md|mdx)$/, '')}`}>About this project</a>
+            {project.data.url && <a href={project.data.url} target="_blank" rel="noreferrer">Visit project (external)</a>}
+            {project.data.repository && <a href={project.data.repository} target="_blank" rel="noreferrer">Source code (external)</a>}
+          </div>
+        </div>
+      </article>)}</div> : <p class="empty-note">Projects will appear here as they are published.</p>}
+  </section>
+</BaseLayout>
