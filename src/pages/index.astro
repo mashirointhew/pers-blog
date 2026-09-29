@@ -10,14 +10,14 @@ const posts = await getPosts();
       <div>
         <div class="mb-6 flex items-baseline justify-between">
           <h1 class="mono text-xs uppercase tracking-[.2em] text-[var(--muted)]">Recent posts</h1>
-          <a href="/blog" class="text-sm text-[var(--accent)]">All posts →</a>
+          <a href="/blog/" class="text-sm text-[var(--accent)]">All posts →</a>
         </div>
         {posts.slice(0, 8).map((post) => <PostCard post={post} />)}
       </div>
       <aside class="home-aside">
         <h2 class="mono text-xs uppercase tracking-[.2em]">A few themes</h2>
         <div class="mt-5 flex flex-wrap gap-2">
-          {['design', 'web', 'craft', 'systems', 'life'].map((tag) => <a href={`/tags/${tag}`} class="topic-link">{tag}</a>)}
+          {['design', 'web', 'craft', 'systems', 'life'].map((tag) => <a href={`/tags/${tag}/`} class="topic-link">{tag}</a>)}
         </div>
         <p class="mt-10 text-sm leading-6 text-[var(--muted)]">An independent, low-noise corner of the internet. Notes on making, learning, and paying attention.</p>
       </aside>

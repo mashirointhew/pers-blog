@@ -9,16 +9,16 @@ const { post } = Astro.props;
       >{formatDate(post.data.date)}</time
     >{
       post.data.tags.map((tag: string) => (
-        <a href={`/tags/${tag}`} class="mono uppercase tracking-wider">
+        <a href={`/tags/${encodeURIComponent(tag)}/`} class="mono uppercase tracking-wider">
           #{tag}
         </a>
       ))
     }
   </div><h2 class="serif mt-2 text-2xl leading-tight sm:text-3xl">
-    <a href={`/blog/${postSlug(post.id)}`}>{post.data.title}</a>
+    <a href={`/blog/${postSlug(post.id)}/`}>{post.data.title}</a>
   </h2><p class="mt-2 max-w-2xl text-[var(--muted)]">
     {post.data.description}
   </p><a
     class="mt-4 inline-block text-sm text-[var(--accent)]"
-    href={`/blog/${postSlug(post.id)}`}>Read essay →</a>
+    href={`/blog/${postSlug(post.id)}/`}>Read essay →</a>
 </article>

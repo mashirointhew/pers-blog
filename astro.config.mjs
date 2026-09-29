@@ -5,6 +5,7 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: process.env.SITE_URL ?? 'https://pers-blog.pages.dev',
+  trailingSlash: 'always',
   integrations: [mdx(), tailwind(), sitemap()],
   markdown: { shikiConfig: { theme: 'github-dark' } },
 });

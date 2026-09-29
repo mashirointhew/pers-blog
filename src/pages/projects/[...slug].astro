@@ -15,7 +15,7 @@ const { Content } = await render(project);
 ---
 <BaseLayout title={project.data.title} description={project.data.description} image={project.data.image}>
   <article class="shell detail-page pb-20 pt-12 lg:pt-16">
-    <a href="/projects" class="back-link">All projects</a>
+    <a href="/projects/" class="back-link">All projects</a>
     <header class="detail-header">
       <p class="mono section-kicker">Project / {project.data.status}</p>
       <h1 class="serif section-title">{project.data.title}</h1>
