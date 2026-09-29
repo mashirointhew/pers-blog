@@ -40,7 +40,7 @@
     if (pagefind) return pagefind;
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     const module = await import(/* @vite-ignore */ `${base}/pagefind/pagefind.js`);
-    pagefind = module.default as Pagefind;
+    pagefind = module as unknown as Pagefind;
     return pagefind;
   }
 
@@ -110,8 +110,9 @@
           link.append(title, excerpt);
           output.append(link);
         }
-      } catch {
-        status.textContent = 'Search is available after a production build. Run npm run build to create the index.';
+      } catch (error) {
+        console.error('Pagefind search failed to load or run.', error);
+        status.textContent = 'Search could not load. Please try again shortly.';
       }
     }, 120);
   });
