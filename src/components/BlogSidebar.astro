@@ -19,7 +19,7 @@ const recentPosts = posts.filter((post) => post.id !== currentPostId).slice(0, 4
     <h2 class="sidebar-label">Browse</h2>
     <nav class="sidebar-links" aria-label="Blog sections">
       <a href="/blog/">All writing <span>{posts.length}</span></a>
-      <a href="/search" data-open-search>Search posts</a>
+      <a href="/search" role="button" aria-expanded="false" aria-controls="header-search" data-toggle-search>Search posts</a>
     </nav>
   </section>
 

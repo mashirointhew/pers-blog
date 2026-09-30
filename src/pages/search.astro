@@ -2,66 +2,23 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Search">
-  <section class="shell max-w-3xl pb-20 pt-16 lg:pt-24">
+  <section class="shell search-page pb-20 pt-16 lg:pt-24">
     <p class="mono text-xs uppercase tracking-[.2em] text-[var(--muted)]">Search posts</p>
     <h1 class="serif mt-5 text-6xl tracking-tight">Search</h1>
     <label class="sr-only" for="site-search">Search posts</label>
-    <input id="site-search" class="search-input mt-10" type="search" placeholder="Search posts…" autocomplete="off" />
+    <input id="site-search" class="search-input mt-10" type="search" placeholder="Search posts..." autocomplete="off" />
     <p id="search-status" class="search-status mt-5" role="status" aria-live="polite">Search titles and posts by keyword.</p>
     <div id="search-results" class="mt-6" aria-label="Search results"></div>
   </section>
   <script>
-    const input = document.querySelector<HTMLInputElement>('#site-search');
-    const output = document.querySelector<HTMLDivElement>('#search-results');
-    const status = document.querySelector<HTMLParagraphElement>('#search-status');
-    let pagefind: { search: (query: string) => Promise<{ results: Array<{ data: () => Promise<{ url: string; meta: { title?: string }; excerpt: string }> }> }> } | undefined;
-    let timer: number | undefined;
+    import { bindPagefindSearch } from '../scripts/pagefind-search';
 
-    async function getPagefind() {
-      if (pagefind) return pagefind;
-      const basePath = import.meta.env.BASE_URL;
-      const moduleUrl = `${basePath.replace(/\/$/, '')}/pagefind/pagefind.js`;
-      const module = await import(/* @vite-ignore */ moduleUrl);
-      pagefind = module.default;
-      return pagefind;
-    }
-
-    input?.addEventListener('input', () => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(async () => {
-        const query = input.value.trim();
-        if (!output || !status) return;
-        output.replaceChildren();
-        if (!query) {
-          status.textContent = 'Search titles and posts by keyword.';
-          return;
-        }
-
-        status.textContent = 'Searching…';
-        try {
-          const search = await getPagefind();
-          if (!search) throw new Error('Search index unavailable');
-          const response = await search.search(query);
-          const results = await Promise.all(response.results.slice(0, 10).map((item) => item.data()));
-          status.textContent = results.length ? `${results.length}${response.results.length > 10 ? '+' : ''} results` : 'No matching posts.';
-          for (const result of results) {
-            const link = document.createElement('a');
-            link.href = result.url;
-            link.className = 'search-result';
-            const title = document.createElement('span');
-            title.className = 'search-result-title';
-            title.textContent = result.meta.title ?? 'Untitled';
-            const excerpt = document.createElement('p');
-            excerpt.className = 'search-result-excerpt';
-            excerpt.textContent = result.excerpt.replace(/<[^>]*>/g, '');
-            link.append(title, excerpt);
-            output.append(link);
-          }
-        } catch {
-          status.textContent = 'Search is available after a production build. Try `npm run build`, then preview the site.';
-        }
-      }, 120);
+    bindPagefindSearch({
+      input: document.querySelector<HTMLInputElement>('#site-search'),
+      output: document.querySelector<HTMLDivElement>('#search-results'),
+      status: document.querySelector<HTMLParagraphElement>('#search-status'),
+      emptyMessage: 'Search titles and posts by keyword.',
+      limit: 10,
     });
-
   </script>
 </BaseLayout>

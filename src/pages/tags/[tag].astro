@@ -5,4 +5,4 @@ import { getTagMap } from '../../lib/posts';
 export async function getStaticPaths(){ const tagMap = await getTagMap(); return Object.entries(tagMap).map(([tag, posts]) => ({ params: { tag }, props: { tag, posts } })); }
 const { tag, posts } = Astro.props;
 ---
-<BaseLayout title={`#${tag}`} description={`Posts tagged ${tag}.`}><section class="mx-auto max-w-4xl px-6 pb-20 pt-16 lg:pt-24"><p class="mono text-xs uppercase tracking-[.2em] text-[var(--accent)]">Topic</p><h1 class="serif mt-5 text-6xl tracking-tight">#{tag}</h1><div class="mt-16">{posts.map((post) => <PostCard post={post} />)}</div></section></BaseLayout>
+<BaseLayout title={`#${tag}`} description={`Posts tagged ${tag}.`}><section class="shell tag-page pb-20 pt-16 lg:pt-24"><p class="mono text-xs uppercase tracking-[.2em] text-[var(--accent)]">Topic</p><h1 class="serif mt-5 text-6xl tracking-tight">#{tag}</h1><div class="mt-16">{posts.map((post) => <PostCard post={post} />)}</div></section></BaseLayout>

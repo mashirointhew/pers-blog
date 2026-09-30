@@ -27,22 +27,22 @@
 </header>
 
 <script>
+  import { bindPagefindSearch } from '../scripts/pagefind-search';
+
   const toggle = document.querySelector<HTMLButtonElement>('#search-toggle');
   const panel = document.querySelector<HTMLElement>('#header-search');
   const input = document.querySelector<HTMLInputElement>('#header-search-input');
   const output = document.querySelector<HTMLDivElement>('#header-search-results');
   const status = document.querySelector<HTMLParagraphElement>('#header-search-status');
-  type Pagefind = { search: (query: string) => Promise<{ results: Array<{ data: () => Promise<{ url: string; meta: { title?: string }; excerpt: string }> }> }> };
-  let pagefind: Pagefind | undefined;
-  let timer: number | undefined;
-
-  async function getPagefind() {
-    if (pagefind) return pagefind;
-    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-    const module = await import(/* @vite-ignore */ `${base}/pagefind/pagefind.js`);
-    pagefind = module as unknown as Pagefind;
-    return pagefind;
-  }
+  const searchTriggers = () => Array.from(document.querySelectorAll<HTMLButtonElement | HTMLAnchorElement>('#search-toggle, [data-toggle-search]'));
+  let lastSearchTrigger: HTMLElement | null = toggle;
+  bindPagefindSearch({
+    input,
+    output,
+    status,
+    emptyMessage: 'Type to search posts.',
+    limit: 8,
+  });
 
   function openSearch() {
     if (!panel || !toggle) return;
@@ -50,23 +50,26 @@
     panel.removeAttribute('inert');
     panel.setAttribute('aria-hidden', 'false');
     toggle.setAttribute('aria-expanded', 'true');
+    for (const trigger of searchTriggers()) trigger.setAttribute('aria-expanded', 'true');
     input?.removeAttribute('tabindex');
     input?.focus();
   }
 
-  function closeSearch() {
+  function closeSearch(restoreFocus = true) {
     if (!panel || !toggle) return;
     panel.classList.remove('is-open');
     panel.setAttribute('inert', '');
     panel.setAttribute('aria-hidden', 'true');
     input?.setAttribute('tabindex', '-1');
     toggle.setAttribute('aria-expanded', 'false');
-    toggle.focus();
+    for (const trigger of searchTriggers()) trigger.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) (lastSearchTrigger ?? toggle).focus();
   }
 
   if (toggle && !toggle.dataset.bound) {
     toggle.dataset.bound = 'true';
     toggle.addEventListener('click', () => {
+      lastSearchTrigger = toggle;
       if (!panel?.classList.contains('is-open')) openSearch();
       else closeSearch();
     });
@@ -74,52 +77,19 @@
 
   document.addEventListener('click', (event) => {
     const target = event.target;
-    if (target instanceof Element && target.closest('[data-open-search]')) {
+    const trigger = target instanceof Element ? target.closest<HTMLElement>('[data-toggle-search]') : null;
+    if (trigger) {
       event.preventDefault();
-      openSearch();
+      lastSearchTrigger = trigger;
+      if (!panel?.classList.contains('is-open')) openSearch();
+      else closeSearch(false);
     }
-  });
-
-  input?.addEventListener('input', () => {
-    window.clearTimeout(timer);
-    timer = window.setTimeout(async () => {
-      const query = input.value.trim();
-      if (!output || !status) return;
-      output.replaceChildren();
-      if (!query) {
-        status.textContent = 'Type to search posts.';
-        return;
-      }
-
-      status.textContent = 'Searching...';
-      try {
-        const index = await getPagefind();
-        const response = await index.search(query);
-        const results = await Promise.all(response.results.slice(0, 8).map((item) => item.data()));
-        status.textContent = results.length ? `${results.length}${response.results.length > 8 ? '+' : ''} results` : 'No matching posts.';
-        for (const result of results) {
-          const link = document.createElement('a');
-          link.href = result.url;
-          link.className = 'search-result';
-          const title = document.createElement('span');
-          title.className = 'search-result-title';
-          title.textContent = result.meta.title ?? 'Untitled';
-          const excerpt = document.createElement('p');
-          excerpt.className = 'search-result-excerpt';
-          excerpt.textContent = result.excerpt.replace(/<[^>]*>/g, '');
-          link.append(title, excerpt);
-          output.append(link);
-        }
-      } catch (error) {
-        console.error('Pagefind search failed to load or run.', error);
-        status.textContent = 'Search could not load. Please try again shortly.';
-      }
-    }, 120);
   });
 
   window.addEventListener('keydown', (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
+      lastSearchTrigger = toggle;
       openSearch();
     } else if (event.key === 'Escape' && panel?.classList.contains('is-open')) {
       closeSearch();
