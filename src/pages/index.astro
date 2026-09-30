@@ -18,6 +18,12 @@ const tags = Object.keys(await getTagMap()).sort((a, b) => a.localeCompare(b));
         {posts.slice(0, 8).map((post) => <PostCard post={post} />)}
       </div>
       <aside class="home-aside">
+        <section class="home-aside-section home-themes">
+          <h2 class="mono text-xs uppercase tracking-[.2em]">A few themes</h2>
+          <div class="mt-5 flex flex-wrap gap-2">
+            {tags.map((tag) => <a href={tagPath(tag)} class="topic-link">{tag}</a>)}
+          </div>
+        </section>
         {featuredPosts.length > 0 && <section class="home-featured-section">
           <h2 class="mono text-xs uppercase tracking-[.2em]">Featured post</h2>
           <ul class="home-featured-list">
@@ -30,10 +36,6 @@ const tags = Object.keys(await getTagMap()).sort((a, b) => a.localeCompare(b));
             {featuredLinks.map((link) => <li><a href={link.data.url} target="_blank" rel="noreferrer">{link.data.title}<span aria-hidden="true"> ↗</span></a></li>)}
           </ul>
         </section>}
-        <h2 class="mono text-xs uppercase tracking-[.2em]">A few themes</h2>
-        <div class="mt-5 flex flex-wrap gap-2">
-          {tags.map((tag) => <a href={tagPath(tag)} class="topic-link">{tag}</a>)}
-        </div>
         <p class="mt-10 text-sm leading-6 text-[var(--muted)]">An independent, low-noise corner of the internet. Notes on making, learning, and paying attention.</p>
       </aside>
     </div>
