@@ -1,24 +1,18 @@
 ---
-import { formatDate, postSlug } from "../lib/posts";
+import { formatDate, postPath, tagPath } from '../lib/content';
 const { post } = Astro.props;
 ---
 
 <article class="post-card border-t border-[var(--line)] py-6">
   <div class="flex flex-wrap items-center gap-3 text-xs text-[var(--muted)]">
-    <time datetime={post.data.date.toISOString()}
-      >{formatDate(post.data.date)}</time
-    >{
-      post.data.tags.map((tag: string) => (
-        <a href={`/tags/${encodeURIComponent(tag)}/`} class="mono uppercase tracking-wider">
-          #{tag}
-        </a>
-      ))
-    }
-  </div><h2 class="serif mt-2 text-2xl leading-tight sm:text-3xl">
-    <a href={`/blog/${postSlug(post.id)}/`}>{post.data.title}</a>
-  </h2><p class="mt-2 max-w-2xl text-[var(--muted)]">
-    {post.data.description}
-  </p><a
-    class="mt-4 inline-block text-sm text-[var(--accent)]"
-    href={`/blog/${postSlug(post.id)}/`}>Read essay →</a>
+    <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+    {post.data.tags.map((tag: string) => (
+      <a href={tagPath(tag)} class="mono uppercase tracking-wider">#{tag}</a>
+    ))}
+  </div>
+  <h2 class="serif mt-2 text-2xl leading-tight sm:text-3xl">
+    <a href={postPath(post.id)}>{post.data.title}</a>
+  </h2>
+  <p class="mt-2 max-w-2xl text-[var(--muted)]">{post.data.description}</p>
+  <a class="mt-4 inline-block text-sm text-[var(--accent)]" href={postPath(post.id)}>Read essay →</a>
 </article>

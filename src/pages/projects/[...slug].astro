@@ -1,12 +1,12 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate } from '../../lib/posts';
+import { contentSlug, formatDate, getPublishedProjects } from '../../lib/content';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects', ({ data }) => !data.draft);
+  const projects = await getPublishedProjects();
   return projects.map((project) => ({
-    params: { slug: project.id.replace(/\.(md|mdx)$/, '') },
+    params: { slug: contentSlug(project.id) },
     props: { project },
   }));
 }

@@ -1,8 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
-import { getPosts } from '../lib/posts';
-const posts = await getPosts();
+import { getPublishedLinks, getPublishedPosts, getTagMap, postPath, tagPath } from '../lib/content';
+const posts = await getPublishedPosts();
+const featuredPosts = posts.filter((post) => post.data.featured);
+const featuredLinks = (await getPublishedLinks()).filter((link) => link.data.featured);
+const tags = Object.keys(await getTagMap()).sort((a, b) => a.localeCompare(b));
 ---
 <BaseLayout>
   <section class="shell home-shell pb-20 pt-12 lg:pt-16">
@@ -15,9 +18,21 @@ const posts = await getPosts();
         {posts.slice(0, 8).map((post) => <PostCard post={post} />)}
       </div>
       <aside class="home-aside">
+        {featuredPosts.length > 0 && <section class="home-featured-section">
+          <h2 class="mono text-xs uppercase tracking-[.2em]">Featured post</h2>
+          <ul class="home-featured-list">
+            {featuredPosts.map((post) => <li><a href={postPath(post.id)}>{post.data.title}</a></li>)}
+          </ul>
+        </section>}
+        {featuredLinks.length > 0 && <section class="home-featured-section">
+          <h2 class="mono text-xs uppercase tracking-[.2em]">Featured links</h2>
+          <ul class="home-featured-list">
+            {featuredLinks.map((link) => <li><a href={link.data.url} target="_blank" rel="noreferrer">{link.data.title}<span aria-hidden="true"> ↗</span></a></li>)}
+          </ul>
+        </section>}
         <h2 class="mono text-xs uppercase tracking-[.2em]">A few themes</h2>
         <div class="mt-5 flex flex-wrap gap-2">
-          {['design', 'web', 'craft', 'systems', 'life'].map((tag) => <a href={`/tags/${tag}/`} class="topic-link">{tag}</a>)}
+          {tags.map((tag) => <a href={tagPath(tag)} class="topic-link">{tag}</a>)}
         </div>
         <p class="mt-10 text-sm leading-6 text-[var(--muted)]">An independent, low-noise corner of the internet. Notes on making, learning, and paying attention.</p>
       </aside>

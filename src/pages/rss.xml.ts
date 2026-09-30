@@ -1,11 +1,11 @@
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
-import { getPosts, postSlug } from '../lib/posts';
+import { getPublishedPosts, postPath } from '../lib/content';
 
 export const prerender = true;
 
 export const GET: APIRoute = async (context) => {
-  const posts = await getPosts();
+  const posts = await getPublishedPosts();
 
   return rss({
     title: 'Field Notes',
@@ -15,7 +15,7 @@ export const GET: APIRoute = async (context) => {
       title: data.title,
       description: data.description,
       pubDate: data.date,
-      link: `/blog/${postSlug(id)}/`,
+      link: postPath(id),
     })),
   });
 };

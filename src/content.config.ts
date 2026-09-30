@@ -12,6 +12,7 @@ const posts = defineCollection({
   schema: z.object({
     ...sharedFields,
     updated: z.coerce.date().optional(),
+    featured: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
     image: z.string().optional(),
     references: z.array(z.object({ title: z.string(), url: z.string().url() })).default([]),
@@ -35,6 +36,7 @@ const links = defineCollection({
   schema: z.object({
     ...sharedFields,
     url: z.string().url(),
+    featured: z.boolean().default(false),
     source: z.string().optional(),
     tags: z.array(z.string()).default([]),
   }),

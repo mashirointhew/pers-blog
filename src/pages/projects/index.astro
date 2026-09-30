@@ -1,11 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate } from '../../lib/posts';
+import { formatDate, getPublishedProjects, projectPath } from '../../lib/content';
 
-const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+const projects = await getPublishedProjects();
 ---
 <BaseLayout title="Projects" description="Selected projects and experiments.">
   <section class="shell section-page pb-20 pt-12 lg:pt-16">
@@ -20,7 +17,7 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
           <p class="project-description">{project.data.description}</p>
           {project.data.tags.length > 0 && <p class="project-tags">{project.data.tags.join(' / ')}</p>}
           <div class="project-actions">
-            <a href={`/projects/${project.id.replace(/\.(md|mdx)$/, '')}/`}>About this project</a>
+            <a href={projectPath(project.id)}>About this project</a>
             {project.data.url && <a href={project.data.url} target="_blank" rel="noreferrer">Visit project (external)</a>}
             {project.data.repository && <a href={project.data.repository} target="_blank" rel="noreferrer">Source code (external)</a>}
           </div>

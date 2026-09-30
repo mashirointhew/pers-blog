@@ -1,11 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate } from '../../lib/posts';
+import { formatDate, getPublishedLinks } from '../../lib/content';
 
-const links = (await getCollection('links', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+const links = await getPublishedLinks();
 ---
 <BaseLayout title="Links" description="A small collection of things worth reading, watching, and keeping.">
   <section class="shell section-page pb-20 pt-12 lg:pt-16">

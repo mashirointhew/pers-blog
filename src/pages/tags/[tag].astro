@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/PostCard.astro';
-import { getTagMap } from '../../lib/posts';
+import { getTagMap } from '../../lib/content';
 export async function getStaticPaths(){ const tagMap = await getTagMap(); return Object.entries(tagMap).map(([tag, posts]) => ({ params: { tag }, props: { tag, posts } })); }
 const { tag, posts } = Astro.props;
 ---
