@@ -111,6 +111,10 @@ The build generates the sitemap and search index. RSS is available at `/rss.xml`
 
 The dark theme uses a warm charcoal base (`#171916`) with a faint olive-tinted glow, soft gray dividers, and a restrained lime accent. This keeps the page dark without the harsh contrast of pure black and makes the reading surface feel less flat. Readers can switch to the light theme with the header control. Theme tokens and page styling are in `src/styles/global.css`.
 
+## Responsive layouts
+
+The public site adapts from narrow phone screens to desktop. On smaller screens, the header navigation wraps, page sidebars stack below the main content, and project and link details use a single column. Wider screens restore the two-column layouts. Article images stay within the text column, and long code blocks scroll within their own frame.
+
 ## Configuration and deployment
 
 The default production URL is `https://pers-blog.pages.dev`. Set `SITE_URL` to the site's actual public origin if the Pages project uses a different name or a custom domain. Astro uses it for canonical URLs, the sitemap, and RSS.
