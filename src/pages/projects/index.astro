@@ -1,14 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { formatDate, getPublishedProjects, projectPath } from '../../lib/content';
+import { siteSettings } from '../../lib/site-settings';
 
 const projects = await getPublishedProjects();
 ---
-<BaseLayout title="Projects" description="Selected projects and experiments.">
+<BaseLayout title={siteSettings.pages.projects.title} description={siteSettings.pages.projects.description}>
   <section class="shell section-page pb-20 pt-12 lg:pt-16">
-    <p class="mono section-kicker">Selected work</p>
-    <h1 class="serif section-title">Projects</h1>
-    <p class="section-intro">Projects and experiments I have worked on.</p>
+    <p class="mono section-kicker">{siteSettings.pages.projects.eyebrow}</p>
+    <h1 class="serif section-title">{siteSettings.pages.projects.title}</h1>
+    <p class="section-intro">{siteSettings.pages.projects.description}</p>
     {projects.length ? <div class="project-list mt-12">
       {projects.map((project) => <article class="project-row">
         <div class="project-meta"><time datetime={project.data.date.toISOString()}>{formatDate(project.data.date)}</time><span>{project.data.status}</span></div>

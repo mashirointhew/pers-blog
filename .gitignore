@@ -1,5 +1,11 @@
 # build output
 dist/
+
+# local admin browser tests
+playwright.config.ts
+tests/
+playwright-report/
+test-results/
 # generated types
 .astro/
 

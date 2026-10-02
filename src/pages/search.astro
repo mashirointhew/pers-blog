@@ -1,12 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteSettings } from '../lib/site-settings';
 ---
-<BaseLayout title="Search">
+<BaseLayout title={siteSettings.pages.search.title}>
   <section class="shell search-page pb-20 pt-16 lg:pt-24">
-    <p class="mono text-xs uppercase tracking-[.2em] text-[var(--muted)]">Search posts</p>
-    <h1 class="serif mt-5 text-6xl tracking-tight">Search</h1>
+    <p class="mono text-xs uppercase tracking-[.2em] text-[var(--muted)]">{siteSettings.pages.search.eyebrow}</p>
+    <h1 class="serif mt-5 text-6xl tracking-tight">{siteSettings.pages.search.title}</h1>
     <label class="sr-only" for="site-search">Search posts</label>
-    <input id="site-search" class="search-input mt-10" type="search" placeholder="Search posts..." autocomplete="off" />
+    <input id="site-search" class="search-input mt-10" type="search" placeholder={siteSettings.pages.search.placeholder} autocomplete="off" />
     <p id="search-status" class="search-status mt-5" role="status" aria-live="polite">Search titles and posts by keyword.</p>
     <div id="search-results" class="mt-6" aria-label="Search results"></div>
   </section>

@@ -2,15 +2,16 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { siteSettings, themeStyle } from '../lib/site-settings';
 
 const {
-  title = 'Field Notes',
-  description = 'A personal blog about making things with care.',
+  title = siteSettings.site.name,
+  description = siteSettings.site.description,
   image,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 ---
-<html lang="en">
+<html lang="en" style={themeStyle(siteSettings)}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -21,8 +22,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {image && <meta property="og:image" content={new URL(image, Astro.site ?? Astro.url.origin)} />}
-    <meta name="theme-color" content="#171916" />
-    <title>{title} | Field Notes</title>
+    <meta name="theme-color" content={siteSettings.theme.dark.paper} />
+    <title>{title} | {siteSettings.site.name}</title>
     <script is:inline>
       try {
         const theme = localStorage.getItem('theme');

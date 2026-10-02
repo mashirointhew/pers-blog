@@ -1,0 +1,36 @@
+---
+import { postPath, projectPath, tagPath } from '../lib/content';
+import type { CollectionEntry } from 'astro:content';
+
+type Props = {
+  section: { id: string; title: string };
+  tags: string[];
+  posts: CollectionEntry<'posts'>[];
+  projects: CollectionEntry<'projects'>[];
+  links: CollectionEntry<'links'>[];
+  description: string;
+};
+const { section, tags, posts, projects, links, description } = Astro.props as Props;
+---
+
+{section.id === 'themes' && <section class="home-aside-section home-themes">
+  <h2 class="mono text-xs uppercase tracking-[.2em]">{section.title}</h2>
+  <div class="mt-5 flex flex-wrap gap-2">
+    {tags.map((tag) => <a href={tagPath(tag)} class="topic-link">{tag}</a>)}
+  </div>
+</section>}
+{section.id === 'featuredPosts' && posts.length > 0 && <section class="home-aside-section home-featured-section">
+  <h2 class="mono text-xs uppercase tracking-[.2em]">{section.title}</h2>
+  <ul class="home-featured-list">{posts.map((post) => <li><a href={postPath(post.id)}>{post.data.title}</a></li>)}</ul>
+</section>}
+{section.id === 'featuredProjects' && projects.length > 0 && <section class="home-aside-section home-featured-section">
+  <h2 class="mono text-xs uppercase tracking-[.2em]">{section.title}</h2>
+  <ul class="home-featured-list">{projects.map((project) => <li><a href={projectPath(project.id)}>{project.data.title}</a></li>)}</ul>
+</section>}
+{section.id === 'featuredLinks' && links.length > 0 && <section class="home-aside-section home-featured-section">
+  <h2 class="mono text-xs uppercase tracking-[.2em]">{section.title}</h2>
+  <ul class="home-featured-list">{links.map((link) => <li><a href={link.data.url} target="_blank" rel="noreferrer">{link.data.title}<span aria-hidden="true"> ↗</span></a></li>)}</ul>
+</section>}
+{section.id === 'about' && <section class="home-aside-section home-about">
+  <p class="text-sm leading-6 text-[var(--muted)]">{description}</p>
+</section>}

@@ -1,42 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
-import { getPublishedLinks, getPublishedPosts, getTagMap, postPath, tagPath } from '../lib/content';
+import HomeSidebarSection from '../components/HomeSidebarSection.astro';
+import { getPublishedLinks, getPublishedPosts, getPublishedProjects, getTagMap } from '../lib/content';
+import { siteSettings } from '../lib/site-settings';
+
 const posts = await getPublishedPosts();
 const featuredPosts = posts.filter((post) => post.data.featured);
 const featuredLinks = (await getPublishedLinks()).filter((link) => link.data.featured);
+const featuredProjects = (await getPublishedProjects()).filter((project) => project.data.featured);
 const tags = Object.keys(await getTagMap()).sort((a, b) => a.localeCompare(b));
 ---
+
 <BaseLayout>
   <section class="shell home-shell pb-20 pt-12 lg:pt-16">
     <div class="home-lower">
       <div>
         <div class="mb-6 flex items-baseline justify-between">
-          <h1 class="mono text-xs uppercase tracking-[.2em] text-[var(--muted)]">Recent posts</h1>
-          <a href="/blog/" class="text-sm text-[var(--accent)]">All posts →</a>
+          <h1 class="mono text-xs uppercase tracking-[.2em] text-[var(--muted)]">{siteSettings.pages.home.recentTitle}</h1>
+          <a href="/blog/" class="text-sm text-[var(--accent)]">{siteSettings.pages.home.allPostsLabel} →</a>
         </div>
-        {posts.slice(0, 8).map((post) => <PostCard post={post} />)}
+        {posts.slice(0, siteSettings.home.recentPostLimit).map((post) => <PostCard post={post} />)}
       </div>
       <aside class="home-aside">
-        <section class="home-aside-section home-themes">
-          <h2 class="mono text-xs uppercase tracking-[.2em]">A few themes</h2>
-          <div class="mt-5 flex flex-wrap gap-2">
-            {tags.map((tag) => <a href={tagPath(tag)} class="topic-link">{tag}</a>)}
-          </div>
-        </section>
-        {featuredPosts.length > 0 && <section class="home-featured-section">
-          <h2 class="mono text-xs uppercase tracking-[.2em]">Featured post</h2>
-          <ul class="home-featured-list">
-            {featuredPosts.map((post) => <li><a href={postPath(post.id)}>{post.data.title}</a></li>)}
-          </ul>
-        </section>}
-        {featuredLinks.length > 0 && <section class="home-featured-section">
-          <h2 class="mono text-xs uppercase tracking-[.2em]">Featured links</h2>
-          <ul class="home-featured-list">
-            {featuredLinks.map((link) => <li><a href={link.data.url} target="_blank" rel="noreferrer">{link.data.title}<span aria-hidden="true"> ↗</span></a></li>)}
-          </ul>
-        </section>}
-        <p class="mt-10 text-sm leading-6 text-[var(--muted)]">An independent, low-noise corner of the internet. Notes on making, learning, and paying attention.</p>
+        {siteSettings.home.sidebarSections.filter((section) => section.visible).map((section) => <HomeSidebarSection section={section} tags={tags} posts={featuredPosts} projects={featuredProjects} links={featuredLinks} description={siteSettings.site.homeDescription} />)}
       </aside>
     </div>
   </section>

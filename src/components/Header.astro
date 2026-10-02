@@ -1,17 +1,18 @@
+---
+import { siteSettings } from '../lib/site-settings';
+---
 <header class="site-header">
   <div class="shell header-inner">
-    <a class="brand" href="/" aria-label="Field Notes home">
+    <a class="brand" href="/" aria-label={`${siteSettings.site.name} home`}>
       <svg class="brand-mark" aria-hidden="true" viewBox="0 0 32 32" fill="none">
         <path class="brand-mark-page" d="M7.5 4.75h11l6 6v16.5h-17V4.75Z" />
         <path class="brand-mark-fold" d="M18.5 4.75v6h6" />
         <path class="brand-mark-line" d="M11.5 16.25h9m-9 4h6" />
       </svg>
-      <span class="brand-name serif">Field Notes<span class="brand-period">.</span></span>
+      <span class="brand-name serif">{siteSettings.site.name}<span class="brand-period">.</span></span>
     </a>
     <nav aria-label="Main navigation" class="main-nav">
-      <a href="/blog/">Writing</a>
-      <a href="/projects/">Projects</a>
-      <a href="/links/">Links</a>
+      {siteSettings.site.navigation.filter((item) => item.visible).map((item) => <a href={item.href}>{item.label}</a>)}
       <div id="header-search" class="header-search" aria-hidden="true" inert>
         <label class="sr-only" for="header-search-input">Search posts</label>
         <input id="header-search-input" class="search-input" type="search" placeholder="Search posts" autocomplete="off" tabindex="-1" />

@@ -23,6 +23,7 @@ const projects = defineCollection({
   type: 'content',
   schema: z.object({
     ...sharedFields,
+    featured: z.boolean().default(false),
     status: z.enum(['active', 'complete', 'archived']).default('complete'),
     url: z.string().url().optional(),
     repository: z.string().url().optional(),

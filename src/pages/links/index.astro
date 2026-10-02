@@ -1,14 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { formatDate, getPublishedLinks } from '../../lib/content';
+import { siteSettings } from '../../lib/site-settings';
 
 const links = await getPublishedLinks();
 ---
-<BaseLayout title="Links" description="A small collection of things worth reading, watching, and keeping.">
+<BaseLayout title={siteSettings.pages.links.title} description={siteSettings.pages.links.description}>
   <section class="shell section-page pb-20 pt-12 lg:pt-16">
-    <p class="mono section-kicker">Recommended reading</p>
-    <h1 class="serif section-title">Links</h1>
-    <p class="section-intro">Articles, tools, and other useful things from around the web.</p>
+    <p class="mono section-kicker">{siteSettings.pages.links.eyebrow}</p>
+    <h1 class="serif section-title">{siteSettings.pages.links.title}</h1>
+    <p class="section-intro">{siteSettings.pages.links.description}</p>
     {links.length ? <ul class="links-list mt-12">
       {links.map((item) => <li>
         <time datetime={item.data.date.toISOString()}>{formatDate(item.data.date)}</time>

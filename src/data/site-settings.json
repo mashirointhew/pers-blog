@@ -1,0 +1,126 @@
+{
+  "site": {
+    "name": "Field Notes",
+    "description": "A personal blog about making things with care.",
+    "homeDescription": "An independent, low-noise corner of the internet. Notes on making, learning, and paying attention.",
+    "navigation": [
+      {
+        "label": "Writing",
+        "href": "/blog/",
+        "visible": true
+      },
+      {
+        "label": "Projects",
+        "href": "/projects/",
+        "visible": true
+      },
+      {
+        "label": "Links",
+        "href": "/links/",
+        "visible": true
+      }
+    ],
+    "footerText": "Copyright {year} {name}",
+    "footerLinks": [
+      {
+        "label": "RSS",
+        "href": "/rss.xml"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com"
+      }
+    ]
+  },
+  "pages": {
+    "home": {
+      "recentTitle": "Recent posts",
+      "allPostsLabel": "All posts"
+    },
+    "blog": {
+      "eyebrow": "Posts",
+      "title": "Writing",
+      "description": "Articles and notes on things I find interesting."
+    },
+    "projects": {
+      "eyebrow": "Selected work",
+      "title": "Projects",
+      "description": "Projects and experiments I have worked on."
+    },
+    "links": {
+      "eyebrow": "Recommended reading",
+      "title": "Links",
+      "description": "Articles, tools, and other useful things from around the web."
+    },
+    "search": {
+      "eyebrow": "Search posts",
+      "title": "Search",
+      "placeholder": "Search posts..."
+    }
+  },
+  "home": {
+    "recentPostLimit": 8,
+    "sidebarSections": [
+      {
+        "id": "themes",
+        "title": "A few themes",
+        "visible": true
+      },
+      {
+        "id": "featuredPosts",
+        "title": "Featured post",
+        "visible": true
+      },
+      {
+        "id": "featuredProjects",
+        "title": "Featured projects",
+        "visible": true
+      },
+      {
+        "id": "featuredLinks",
+        "title": "Featured links",
+        "visible": true
+      },
+      {
+        "id": "about",
+        "title": "About",
+        "visible": true
+      }
+    ]
+  },
+  "theme": {
+    "dark": {
+      "paper": "#171916",
+      "ink": "#f0efe9",
+      "muted": "#a2a398",
+      "line": "#373a33",
+      "accent": "#c8f169",
+      "wash": "#20221d",
+      "surface": "#1c1e1a"
+    },
+    "light": {
+      "paper": "#f4f3ee",
+      "ink": "#20211e",
+      "muted": "#73756e",
+      "line": "#d7d8d0",
+      "accent": "#55752b",
+      "wash": "#e9eae2",
+      "surface": "#fffefa"
+    },
+    "fonts": {
+      "sans": "DM Sans",
+      "serif": "Newsreader",
+      "mono": "DM Mono"
+    },
+    "layout": {
+      "shellWidthRem": 76,
+      "sectionWidthRem": 64,
+      "articleWidthRem": 44,
+      "detailWidthRem": 54,
+      "sidebarWidthRem": 13,
+      "homeSidebarWidthRem": 17,
+      "pageGapRem": 4,
+      "sectionGapRem": 4
+    }
+  }
+}

@@ -14,6 +14,12 @@ npm run dev
 
 Astro prints the local development URL (usually `http://localhost:4321`). Search needs the generated Pagefind index, so test it with `npm run build` followed by `npm run preview`.
 
+### Local site control panel
+
+While the dev server is running, open `/admin/` (usually `http://localhost:4321/admin/`). The local-only control panel edits posts, projects, links, featured selections, homepage sections, page copy, navigation, footer links, theme colors, typography, and layout settings. Post and project bodies use Markdown with a live preview.
+
+Saves update the files in this checkout; new content starts as a draft. Changes appear in the Astro preview as it refreshes. The admin page and its filesystem API only run in the development server and are excluded from production builds. Commit and push changes with Git when ready to publish.
+
 ## Content
 
 ### Writing
@@ -77,9 +83,11 @@ src/
 |   |-- projects/     Project entries
 |   `-- links/        Curated external links
 |-- layouts/          Shared document layout and metadata
-|-- lib/              Post query and URL helpers
+|-- lib/              Content, settings, and URL helpers
 |-- pages/            Static routes and collection pages
 |-- styles/           Theme, typography, and layout styles
+|-- data/             Editable site settings
+|-- admin/            Development-only site control panel
 `-- content.config.ts Validated collection schemas
 public/               Static files served as-is
 scripts/              Post creation helper

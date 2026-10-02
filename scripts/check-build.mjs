@@ -21,6 +21,15 @@ for (const file of requiredFiles) {
   }
 }
 
+for (const forbiddenPath of ['admin', '__local_admin']) {
+  try {
+    await access(join(root, forbiddenPath));
+    throw new Error(`Local admin content must not be included in production output: ${forbiddenPath}`);
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith('Local admin content')) throw error;
+  }
+}
+
 const pagefindScript = await readFile(join(root, 'pagefind/pagefind.js'), 'utf8');
 if (!pagefindScript.trim()) throw new Error('Pagefind script is empty.');
 
