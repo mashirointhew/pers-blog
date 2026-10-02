@@ -12,6 +12,9 @@ test-results/
 # dependencies
 node_modules/
 
+#codex session
+codex-session-01a0eda4-b5c1-7ad0-a0c0-e87617706d8d.md
+
 # logs
 npm-debug.log*
 yarn-debug.log*
