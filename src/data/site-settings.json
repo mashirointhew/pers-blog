@@ -114,13 +114,13 @@
     },
     "layout": {
       "shellWidthRem": 76,
-      "sectionWidthRem": 64,
+      "sectionWidthRem": 50,
       "articleWidthRem": 44,
       "detailWidthRem": 54,
       "sidebarWidthRem": 13,
       "homeSidebarWidthRem": 17,
       "pageGapRem": 4,
-      "sectionGapRem": 4
+      "sectionGapRem": 3
     }
   }
 }
